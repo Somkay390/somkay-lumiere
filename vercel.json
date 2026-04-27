@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "destination": "https://somkaylumiere.us10.list-manage.com/subscribe?u=eac91ee493f8356103ccc3cc6&id=91fd2d2fb1",
+      "permanent": false
+    }
+  ]
+}
