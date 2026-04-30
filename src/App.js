@@ -10,7 +10,7 @@ const chapters = [
     notes: "Cedarwood • Black Pepper • Grapefruit • Lavender",
     desc: "The sudden surge of ambition that sets the journey in motion.",
     fullStory: "Ignite is the burst of energy that propels one forward, embodying the sudden surge of inspiration or ambition that sets the journey in motion. The warm, earthy cedarwood and spicy black pepper spark excitement, while the fresh grapefruit offers a burst of clarity. Lavender brings balance, symbolizing the beginning of a transformative path.",
-    image: "/chapter1.jpg" 
+    image: "/chapter1.jpg?v=1" // Added cache-breaker
   },
   { 
     id: "02", 
@@ -19,7 +19,7 @@ const chapters = [
     notes: "Amber • Honey • Vetiver • Lemon Peel",
     desc: "The long trail through challenges and growth.",
     fullStory: "Horizon captures the journey—the long trail that leads through challenges and growth. The amber and honey create a grounded sweetness, evoking a sense of perseverance and warmth, while vetiver symbolizes resilience and stability. The lemon peel adds a touch of brightness, signaling the promise of something new on the horizon.",
-    image: "/chapter2.jpg"
+    image: "/chapter2.jpg?v=1" // Added cache-breaker
   },
   { 
     id: "03",
@@ -28,7 +28,7 @@ const chapters = [
     notes: "Musk • White Amber • Sandalwood • Violet",
     desc: "The essence of inner peace and the clarity of transformation.",
     fullStory: "Lumen is the essence of inner peace and the clarity that comes with transformation. It’s the fragrance of reaching the light after navigating the darkness—an aura of calm, understanding, and fulfillment. The musk and sandalwood ground the scent, while the white amber radiates warmth and serenity.",
-    image: "/chapter3.jpg"
+    image: "/chapter3.jpg?v=1" // Added cache-breaker
   }
 ];
 
@@ -36,22 +36,43 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState("");
   const [activeStory, setActiveStory] = useState(null);
+  const [status, setStatus] = useState("idle"); // idle, sending, success, error
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 3500);
     return () => clearTimeout(timer);
   }, []);
 
-  const handleSubscribe = (e) => {
+  const handleSubscribe = async (e) => {
     e.preventDefault();
-    alert(`The ritual has begun. ${email} is now part of the Founding Circle.`);
-    setEmail("");
+    setStatus("sending");
+
+    // The cleaned URL from your Mailchimp Embedded Form
+    const mailchimpUrl = "https://somkaylumiere.us10.list-manage.com/subscribe/post?u=eac91ee493f8356103ccc3cc6&id=91fd2d2fb1&f_id=00e34ae4f0";
+
+    const formData = new FormData();
+    formData.append('EMAIL', email);
+
+    try {
+      await fetch(mailchimpUrl, {
+        method: 'POST',
+        body: formData,
+        mode: 'no-cors', // Essential for Mailchimp
+      });
+      
+      setStatus("success");
+      alert(`YOU HAVE BEEN INITIATED.`);
+      setEmail("");
+    } catch (error) {
+      setStatus("error");
+      alert("THE RITUAL FAILED. PLEASE TRY AGAIN.");
+    }
   };
 
   return (
     <div className="bg-obsidian text-bone min-h-screen selection:bg-gold selection:text-black overflow-x-hidden relative">
       
-      {/* THE GENERATIVE LIGHTNING SYSTEM (Fixed to Viewport) */}
+      {/* THE GENERATIVE LIGHTNING SYSTEM */}
       <div className="fixed inset-0 pointer-events-none z-0 flex justify-center">
         <svg width="600" height="100%" preserveAspectRatio="none" className="overflow-visible opacity-50">
           <defs>
@@ -61,7 +82,6 @@ function App() {
             </filter>
           </defs>
           
-          {/* MAIN BOLT - Starts at Absolute Top (y=0) */}
           <motion.path
             d="M 300 0 L 280 150 L 320 300 L 270 500 L 340 750 L 290 950 L 310 1200"
             fill="none"
@@ -74,42 +94,6 @@ function App() {
               pathLength: { duration: 2, ease: "easeIn" },
               opacity: { duration: 0.1, repeat: Infinity } 
             }}
-          />
-
-          {/* BRANCH 1 - Originates from Main Bolt at y=300 */}
-          <motion.path
-            d="M 320 300 L 400 450 L 370 550 L 450 700"
-            fill="none"
-            stroke="#D4AF37"
-            strokeWidth="1.2"
-            filter="url(#lightningGlow)"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ delay: 1.2, duration: 1.5 }}
-          />
-
-          {/* NESTED BRANCH - Grows out of Branch 1 at y=550 */}
-          <motion.path
-            d="M 370 550 L 330 650 L 350 750"
-            fill="none"
-            stroke="#D4AF37"
-            strokeWidth="0.6"
-            filter="url(#lightningGlow)"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ delay: 2, duration: 1 }}
-          />
-
-          {/* LEFT SCATTER - Originates from Main Bolt at y=500 */}
-          <motion.path
-            d="M 270 500 L 150 650 L 180 750 L 100 900"
-            fill="none"
-            stroke="#D4AF37"
-            strokeWidth="0.8"
-            filter="url(#lightningGlow)"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ delay: 1.8, duration: 2 }}
           />
         </svg>
       </div>
@@ -137,7 +121,7 @@ function App() {
         )}
       </AnimatePresence>
 
-      {/* 1. HERO SECTION */}
+      {/* HERO SECTION */}
       <section className="h-screen flex flex-col items-center justify-center text-center px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -161,7 +145,7 @@ function App() {
         </motion.div>
       </section>
 
-      {/* 2. PHILOSOPHY */}
+      {/* PHILOSOPHY */}
       <section className="py-48 px-6 text-center relative z-10">
         <div className="max-w-2xl mx-auto">
           <h2 className="font-serif italic text-4xl mb-8 text-bone/90">We do not hide the breaks. <br/> We gild them.</h2>
@@ -171,7 +155,7 @@ function App() {
         </div>
       </section>
 
-      {/* 3. ALCHEMY COLLECTION */}
+      {/* ALCHEMY COLLECTION */}
       <section id="collection" className="py-40 px-6 max-w-6xl mx-auto relative z-10">
         {chapters.map((ch, i) => (
           <motion.div 
@@ -203,7 +187,7 @@ function App() {
         ))}
       </section>
 
-      {/* 4. THE NARRATIVE VAULT */}
+      {/* THE NARRATIVE VAULT */}
       <AnimatePresence>
         {activeStory && (
           <motion.div 
@@ -224,7 +208,7 @@ function App() {
         )}
       </AnimatePresence>
 
-      {/* 5. FOOTER & FOUNDING CIRCLE */}
+      {/* FOOTER & FOUNDING CIRCLE */}
       <footer className="py-40 bg-black/50 border-t border-white/5 text-center px-6 relative z-10">
         <h2 className="font-serif text-3xl mb-4 text-bone">Join the Founding Circle</h2>
         <p className="font-sans text-neutral-500 text-[10px] tracking-widest uppercase mb-12 italic">Be the first to step into the light.</p>
@@ -233,13 +217,18 @@ function App() {
           <input 
             required 
             type="email" 
+            name="email"
             value={email} 
             onChange={(e) => setEmail(e.target.value)} 
-            placeholder="YOUR EMAIL" 
+            placeholder={status === "sending" ? "TRANSMITTING..." : "YOUR EMAIL"} 
             className="bg-transparent border-b border-white/10 w-full py-4 outline-none focus:border-gold transition-colors font-sans text-[10px] tracking-widest uppercase text-center" 
           />
-          <button type="submit" className="font-sans text-gold uppercase tracking-[.3em] text-[10px] whitespace-nowrap hover:text-white transition-colors">
-            Subscribe
+          <button 
+            type="submit" 
+            disabled={status === "sending"}
+            className="font-sans text-gold uppercase tracking-[.3em] text-[10px] whitespace-nowrap hover:text-white transition-colors disabled:opacity-30"
+          >
+            {status === "sending" ? "Processing..." : "Subscribe"}
           </button>
         </form>
 
