@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Analytics } from "@vercel/analytics/react"; // Added for tracking
+import { Analytics } from "@vercel/analytics/react";
+import ReactGA from "react-ga4"; // Added Google Analytics
 
 // --- BRAND DATA ---
 const chapters = [
@@ -39,7 +40,11 @@ function App() {
   const [activeStory, setActiveStory] = useState(null);
   const [status, setStatus] = useState("idle");
 
+  // INITIALIZE ANALYTICS
   useEffect(() => {
+    ReactGA.initialize("G-WC35KK5TEN");
+    ReactGA.send({ hitType: "pageview", page: window.location.pathname });
+    
     const timer = setTimeout(() => setLoading(false), 3500);
     return () => clearTimeout(timer);
   }, []);
@@ -48,8 +53,14 @@ function App() {
     e.preventDefault();
     setStatus("sending");
 
-    const mailchimpUrl = "https://somkaylumiere.us10.list-manage.com/subscribe/post?u=eac91ee493f8356103ccc3cc6&id=91fd2d2fb1&f_id=00e34ae4f0";
+    // Track the click in Google Analytics
+    ReactGA.event({
+      category: "Conversion",
+      action: "Joined Founding Circle",
+      label: "Footer Form"
+    });
 
+    const mailchimpUrl = "https://somkaylumiere.us10.list-manage.com/subscribe/post?u=eac91ee493f8356103ccc3cc6&id=91fd2d2fb1&f_id=00e34ae4f0";
     const formData = new FormData();
     formData.append('EMAIL', email);
 
@@ -146,7 +157,6 @@ function App() {
       {/* 2. PHILOSOPHY & MANIFESTO */}
       <section id="philosophy" className="py-60 px-6 text-center relative z-10 bg-gradient-to-b from-transparent via-black/20 to-transparent">
         <div className="max-w-3xl mx-auto flex flex-col items-center">
-          
           <motion.img 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -156,29 +166,17 @@ function App() {
             className="w-full max-w-xl mb-24 border border-white/5 shadow-2xl"
             alt="The Somkay Lumière Manifesto"
           />
-
           <div className="space-y-12">
             <h2 className="font-serif italic text-4xl md:text-6xl mb-8 text-bone/90 leading-tight">
               We do not hide the breaks. <br/> 
               <span className="text-gold">We gild them.</span>
             </h2>
-            
             <div className="h-px w-12 bg-gold/30 mx-auto mb-10"></div>
-            
             <div className="space-y-8 font-serif text-xl md:text-2xl text-neutral-300 font-light leading-relaxed italic max-w-2xl mx-auto">
-              <p>
-                "SomkayLumière is an identity system forged in the belief that our scars are not flaws, 
-                but maps of where we have conquered."
-              </p>
-              <p>
-                "We do not design for the untouched; we design for the resilient. Our scents are olfactory rituals, 
-                transforming personal mythology into light."
-              </p>
+              <p>"SomkayLumière is an identity system forged in the belief that our scars are not flaws, but maps of where we have conquered."</p>
+              <p>"We do not design for the untouched; we design for the resilient. Our scents are olfactory rituals, transforming personal mythology into light."</p>
             </div>
-            
-            <p className="font-sans text-neutral-500 font-light leading-relaxed tracking-[.3em] text-[10px] uppercase pt-8">
-              A Signature of Reclamation.
-            </p>
+            <p className="font-sans text-neutral-500 font-light leading-relaxed tracking-[.3em] text-[10px] uppercase pt-8">A Signature of Reclamation.</p>
           </div>
         </div>
       </section>
@@ -194,18 +192,18 @@ function App() {
               <img src={process.env.PUBLIC_URL + ch.image} className="w-full h-full object-cover grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-[2000ms]" alt={ch.title} />
               <div className="absolute inset-0 flex items-center justify-center text-gold/[0.03] font-serif text-[15rem] pointer-events-none italic">{ch.id}</div>
             </div>
-
             <div className="w-full md:w-1/2 space-y-10">
               <div>
                 <p className="font-serif italic text-gold text-3xl mb-2">{ch.sub}</p>
                 <h3 className="text-5xl font-serif tracking-tight">{ch.title}</h3>
               </div>
               <p className="font-sans text-gold/80 text-[10px] tracking-[.4em] uppercase border-l border-gold/30 pl-4">{ch.notes}</p>
-              <p className="font-sans text-neutral-400 font-light leading-relaxed text-sm max-w-sm">
-                {ch.desc}
-              </p>
+              <p className="font-sans text-neutral-400 font-light leading-relaxed text-sm max-w-sm">{ch.desc}</p>
               <button 
-                onClick={() => setActiveStory(ch)}
+                onClick={() => {
+                  ReactGA.event({ category: "Engagement", action: "Viewed Narrative", label: ch.title });
+                  setActiveStory(ch);
+                }}
                 className="font-sans text-bone text-[9px] tracking-[.4em] uppercase border-b border-gold/40 pb-2 hover:text-gold transition-all"
               >
                 Explore Narrative
@@ -225,12 +223,8 @@ function App() {
             <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="max-w-3xl text-center space-y-12">
               <p className="font-sans text-gold tracking-[.5em] uppercase text-[9px]">{activeStory.title}</p>
               <h2 className="text-6xl font-serif italic text-bone">{activeStory.sub}</h2>
-              <p className="text-xl md:text-2xl text-neutral-200 font-serif italic font-light leading-relaxed">
-                {activeStory.fullStory}
-              </p>
-              <button onClick={() => setActiveStory(null)} className="font-sans text-gold text-[9px] tracking-[.5em] uppercase border border-gold/20 px-12 py-4 hover:bg-gold hover:text-black transition-all">
-                Close Ritual
-              </button>
+              <p className="text-xl md:text-2xl text-neutral-200 font-serif italic font-light leading-relaxed">{activeStory.fullStory}</p>
+              <button onClick={() => setActiveStory(null)} className="font-sans text-gold text-[9px] tracking-[.5em] uppercase border border-gold/20 px-12 py-4 hover:bg-gold hover:text-black transition-all">Close Ritual</button>
             </motion.div>
           </motion.div>
         )}
@@ -240,38 +234,20 @@ function App() {
       <footer className="py-40 bg-black/50 border-t border-white/5 text-center px-6 relative z-10">
         <h2 className="font-serif text-3xl mb-4 text-bone">Join the Founding Circle</h2>
         <p className="font-sans text-neutral-500 text-[10px] tracking-widest uppercase mb-12 italic">Be the first to step into the light.</p>
-        
         <form onSubmit={handleSubscribe} className="max-w-md mx-auto flex flex-col md:flex-row gap-6 mb-24">
           <input 
-            required 
-            type="email" 
-            name="email"
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
+            required type="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} 
             placeholder={status === "sending" ? "TRANSMITTING..." : "YOUR EMAIL"} 
             className="bg-transparent border-b border-white/10 w-full py-4 outline-none focus:border-gold transition-colors font-sans text-[10px] tracking-widest uppercase text-center" 
           />
-          <button 
-            type="submit" 
-            disabled={status === "sending"}
-            className="font-sans text-gold uppercase tracking-[.3em] text-[10px] whitespace-nowrap hover:text-white transition-colors disabled:opacity-30"
-          >
+          <button type="submit" disabled={status === "sending"} className="font-sans text-gold uppercase tracking-[.3em] text-[10px] whitespace-nowrap hover:text-white transition-colors disabled:opacity-30">
             {status === "sending" ? "Processing..." : "Subscribe"}
           </button>
         </form>
-
         <div className="space-y-12">
           <div className="flex justify-center">
-            <a 
-              href="https://www.instagram.com/somkaylumiere" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="font-sans text-gold text-[9px] tracking-[.5em] uppercase hover:text-white transition-colors border border-gold/20 px-6 py-2"
-            >
-              Instagram
-            </a>
+            <a href="https://www.instagram.com/somkaylumiere" target="_blank" rel="noopener noreferrer" className="font-sans text-gold text-[9px] tracking-[.5em] uppercase hover:text-white transition-colors border border-gold/20 px-6 py-2">Instagram</a>
           </div>
-          
           <div className="space-y-4 opacity-30">
             <p className="font-sans text-[8px] tracking-[.6em] uppercase">Somkay Lumière • United States</p>
             <p className="font-sans text-[7px] tracking-widest uppercase italic text-gold">Scars into Light</p>
@@ -279,7 +255,7 @@ function App() {
         </div>
       </footer>
 
-      {/* TRACKING SYSTEM */}
+      {/* TRACKING SYSTEMS */}
       <Analytics /> 
     </div>
   );
