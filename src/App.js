@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Analytics } from "@vercel/analytics/react"; // Added for tracking
 
 // --- BRAND DATA ---
 const chapters = [
@@ -146,7 +147,6 @@ function App() {
       <section id="philosophy" className="py-60 px-6 text-center relative z-10 bg-gradient-to-b from-transparent via-black/20 to-transparent">
         <div className="max-w-3xl mx-auto flex flex-col items-center">
           
-          {/* PHILOSOPHY IMAGE - Now Always in Color */}
           <motion.img 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -278,6 +278,9 @@ function App() {
           </div>
         </div>
       </footer>
+
+      {/* TRACKING SYSTEM */}
+      <Analytics /> 
     </div>
   );
 }
