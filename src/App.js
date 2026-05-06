@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Analytics } from "@vercel/analytics/react";
-import ReactGA from "react-ga4"; // Added Google Analytics
+import ReactGA from "react-ga4";
 
 // --- BRAND DATA ---
 const chapters = [
@@ -40,11 +40,12 @@ function App() {
   const [activeStory, setActiveStory] = useState(null);
   const [status, setStatus] = useState("idle");
 
-  // INITIALIZE ANALYTICS
+  // INITIALIZE ANALYTICS & LOADING STATE
   useEffect(() => {
+    // Initialize Google Analytics with Kay's specific ID
     ReactGA.initialize("G-WC35KK5TEN");
     ReactGA.send({ hitType: "pageview", page: window.location.pathname });
-    
+
     const timer = setTimeout(() => setLoading(false), 3500);
     return () => clearTimeout(timer);
   }, []);
@@ -53,7 +54,7 @@ function App() {
     e.preventDefault();
     setStatus("sending");
 
-    // Track the click in Google Analytics
+    // Track the subscription attempt in Google Analytics
     ReactGA.event({
       category: "Conversion",
       action: "Joined Founding Circle",
@@ -178,6 +179,37 @@ function App() {
             </div>
             <p className="font-sans text-neutral-500 font-light leading-relaxed tracking-[.3em] text-[10px] uppercase pt-8">A Signature of Reclamation.</p>
           </div>
+        </div>
+      </section>
+
+{/* 2.5 KICKSTARTER CALL TO ACTION - Date Removed */}
+      <section className="py-32 px-6 bg-black/40 border-y border-gold/10 relative z-10">
+        <div className="max-w-4xl mx-auto text-center space-y-10">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 2 }}
+          >
+            <p className="font-sans text-gold tracking-[.6em] uppercase text-[10px] mb-4">The Genesis</p>
+            <h2 className="text-4xl md:text-5xl font-serif text-bone leading-tight mb-8">
+              The Alchemy Set: <br/> 
+              <span className="italic font-extralight text-gold/80">A Ritual of Co-Creation</span>
+            </h2>
+            
+            <p className="font-serif text-lg text-neutral-400 italic max-w-2xl mx-auto mb-12 leading-relaxed">
+              Join the Founding Circle on Kickstarter and help us anchor the future of Somkay Lumière.
+            </p>
+
+            <a 
+              href="https://www.kickstarter.com/projects/somkaylumiere/somkay-lumiere-fragrance-as-identity"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => ReactGA.event({ category: "Conversion", action: "Clicked Kickstarter Link" })}
+              className="inline-block font-sans px-12 py-5 border border-gold/30 text-gold text-[10px] tracking-[.4em] uppercase hover:bg-gold hover:text-black transition-all duration-700 shadow-[0_0_20px_rgba(212,175,55,0.05)]"
+            >
+              Enter the Campaign
+            </a>
+          </motion.div>
         </div>
       </section>
 
