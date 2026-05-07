@@ -38,7 +38,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState("");
   const [activeStory, setActiveStory] = useState(null);
-  const [status, setStatus] = useState("idle");
+  const [status] = useState("idle");
 
   useEffect(() => {
     // Initialize Google Analytics (Kay's ID)
