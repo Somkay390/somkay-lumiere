@@ -38,10 +38,10 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState("");
   const [activeStory, setActiveStory] = useState(null);
-  const [status] = useState("idle");
+  const [status, setStatus] = useState("idle");
 
   useEffect(() => {
-    // Initialize Google Analytics (Kay's ID)
+    // Initialize Google Analytics (Measurement ID: G-WC35KK5TEN)
     ReactGA.initialize("G-WC35KK5TEN");
     ReactGA.send({ hitType: "pageview", page: window.location.pathname });
 
@@ -52,7 +52,12 @@ function App() {
   const handleSubscribe = async (e) => {
     e.preventDefault();
     setStatus("sending");
-    ReactGA.event({ category: "Conversion", action: "Joined Founding Circle" });
+    
+    ReactGA.event({ 
+      category: "Conversion", 
+      action: "Joined Founding Circle",
+      label: "Footer Form"
+    });
 
     const mailchimpUrl = "https://somkaylumiere.us10.list-manage.com/subscribe/post?u=eac91ee493f8356103ccc3cc6&id=91fd2d2fb1&f_id=00e34ae4f0";
     const formData = new FormData();
@@ -63,9 +68,11 @@ function App() {
       setStatus("success");
       alert(`YOU HAVE BEEN INITIATED.`);
       setEmail("");
+      setStatus("idle");
     } catch (error) {
       setStatus("error");
       alert("THE RITUAL FAILED. PLEASE TRY AGAIN.");
+      setStatus("idle");
     }
   };
 
@@ -111,7 +118,6 @@ function App() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16 text-left">
-            {/* Pillar 1 */}
             <div className="space-y-6">
               <h3 className="text-gold font-sans text-[10px] tracking-[.4em] uppercase border-l border-gold/30 pl-4">I. Identity System</h3>
               <p className="text-sm text-neutral-500 font-light leading-relaxed">
@@ -119,7 +125,6 @@ function App() {
                 we build a permanent library of self-expression. Each release is a narrative chapter.
               </p>
             </div>
-            {/* Pillar 2 */}
             <div className="space-y-6">
               <h3 className="text-gold font-sans text-[10px] tracking-[.4em] uppercase border-l border-gold/30 pl-4">II. Technical Intimacy</h3>
               <p className="text-sm text-neutral-500 font-light leading-relaxed">
@@ -127,7 +132,6 @@ function App() {
                 sit on the skin rather than in the air. Tactile, intimate, and evolving.
               </p>
             </div>
-            {/* Pillar 3 */}
             <div className="space-y-6">
               <h3 className="text-gold font-sans text-[10px] tracking-[.4em] uppercase border-l border-gold/30 pl-4">III. Brutalist Aesthetic</h3>
               <p className="text-sm text-neutral-500 font-light leading-relaxed">
@@ -158,7 +162,7 @@ function App() {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => ReactGA.event({ category: "Conversion", action: "Clicked Kickstarter Link" })}
-            className="inline-block font-sans px-12 py-5 border border-gold/30 text-gold text-[10px] tracking-[.4em] uppercase hover:bg-gold hover:text-black transition-all duration-700"
+            className="inline-block font-sans px-12 py-5 border border-gold/30 text-gold text-[10px] tracking-[.4em] uppercase hover:bg-gold hover:text-black transition-all duration-700 shadow-[0_0_20px_rgba(212,175,55,0.05)]"
           >
             Enter the Campaign
           </a>
@@ -221,8 +225,12 @@ function App() {
             placeholder="YOUR EMAIL" 
             className="bg-transparent border-b border-white/10 w-full py-4 outline-none focus:border-gold transition-colors font-sans text-[10px] tracking-widest uppercase text-center text-bone" 
           />
-          <button type="submit" className="font-sans text-gold uppercase tracking-[.3em] text-[10px] whitespace-nowrap hover:text-white transition-colors">
-            Subscribe
+          <button 
+            type="submit" 
+            disabled={status === "sending"}
+            className="font-sans text-gold uppercase tracking-[.3em] text-[10px] whitespace-nowrap hover:text-white transition-colors disabled:opacity-50"
+          >
+            {status === "sending" ? "TRANSMITTING..." : "Subscribe"}
           </button>
         </form>
 
