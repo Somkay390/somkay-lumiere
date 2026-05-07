@@ -3,34 +3,34 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Analytics } from "@vercel/analytics/react";
 import ReactGA from "react-ga4";
 
-// --- BRAND DATA ---
+// --- BRAND DATA: THE ALCHEMY TRILOGY ---
 const chapters = [
   { 
     id: "01",
     title: "Chapter I: Ignite", 
     sub: "The Spark", 
-    notes: "Cedarwood • Black Pepper • Grapefruit • Lavender",
+    notes: "Cedarwood • Black Pepper • Grapefruit",
     desc: "The sudden surge of ambition that sets the journey in motion.",
-    fullStory: "Ignite is the burst of energy that propels one forward, embodying the sudden surge of inspiration or ambition that sets the journey in motion. The warm, earthy cedarwood and spicy black pepper spark excitement, while the fresh grapefruit offers a burst of clarity. Lavender brings balance, symbolizing the beginning of a transformative path.",
-    image: "/chapter1.jpg?v=1" 
+    fullStory: "Ignite is the burst of energy that propels one forward, embodying the sudden surge of inspiration or ambition that sets the journey in motion. The warm, earthy cedarwood and spicy black pepper spark excitement, while the fresh grapefruit offers a burst of clarity.",
+    image: "/chapter1.jpg" 
   },
   { 
     id: "02", 
     title: "Chapter II: Horizon", 
     sub: "The Trail", 
-    notes: "Amber • Honey • Vetiver • Lemon Peel",
+    notes: "Amber • Honey • Vetiver",
     desc: "The long trail through challenges and growth.",
-    fullStory: "Horizon captures the journey—the long trail that leads through challenges and growth. The amber and honey create a grounded sweetness, evoking a sense of perseverance and warmth, while vetiver symbolizes resilience and stability. The lemon peel adds a touch of brightness, signaling the promise of something new on the horizon.",
-    image: "/chapter2.jpg?v=1"
+    fullStory: "Horizon captures the journey—the long trail that leads through challenges and growth. The amber and honey create a grounded sweetness, evoking a sense of perseverance and warmth, while vetiver symbolizes resilience and stability.",
+    image: "/chapter2.jpg"
   },
   { 
     id: "03",
     title: "Chapter III: Lumen", 
     sub: "The Light", 
-    notes: "Musk • White Amber • Sandalwood • Violet",
+    notes: "Musk • White Amber • Sandalwood",
     desc: "The essence of inner peace and the clarity of transformation.",
-    fullStory: "Lumen is the essence of inner peace and the clarity that comes with transformation. It’s the fragrance of reaching the light after navigating the darkness—an aura of calm, understanding, and fulfillment. The musk and sandalwood ground the scent, while the white amber radiates warmth and serenity.",
-    image: "/chapter3.jpg?v=1"
+    fullStory: "Lumen is the essence of inner peace and the clarity that comes with transformation. It’s the fragrance of reaching the light after navigating the darkness—an aura of calm, understanding, and fulfillment.",
+    image: "/chapter3.jpg"
   }
 ];
 
@@ -40,9 +40,8 @@ function App() {
   const [activeStory, setActiveStory] = useState(null);
   const [status, setStatus] = useState("idle");
 
-  // INITIALIZE ANALYTICS & LOADING STATE
   useEffect(() => {
-    // Initialize Google Analytics with Kay's specific ID
+    // Initialize Google Analytics (Kay's ID)
     ReactGA.initialize("G-WC35KK5TEN");
     ReactGA.send({ hitType: "pageview", page: window.location.pathname });
 
@@ -53,24 +52,14 @@ function App() {
   const handleSubscribe = async (e) => {
     e.preventDefault();
     setStatus("sending");
-
-    // Track the subscription attempt in Google Analytics
-    ReactGA.event({
-      category: "Conversion",
-      action: "Joined Founding Circle",
-      label: "Footer Form"
-    });
+    ReactGA.event({ category: "Conversion", action: "Joined Founding Circle" });
 
     const mailchimpUrl = "https://somkaylumiere.us10.list-manage.com/subscribe/post?u=eac91ee493f8356103ccc3cc6&id=91fd2d2fb1&f_id=00e34ae4f0";
     const formData = new FormData();
     formData.append('EMAIL', email);
 
     try {
-      await fetch(mailchimpUrl, {
-        method: 'POST',
-        body: formData,
-        mode: 'no-cors',
-      });
+      await fetch(mailchimpUrl, { method: 'POST', body: formData, mode: 'no-cors' });
       setStatus("success");
       alert(`YOU HAVE BEEN INITIATED.`);
       setEmail("");
@@ -83,54 +72,6 @@ function App() {
   return (
     <div className="bg-obsidian text-bone min-h-screen selection:bg-gold selection:text-black overflow-x-hidden relative">
       
-      {/* LIGHTNING SYSTEM */}
-      <div className="fixed inset-0 pointer-events-none z-0 flex justify-center">
-        <svg width="600" height="100%" preserveAspectRatio="none" className="overflow-visible opacity-30">
-          <defs>
-            <filter id="lightningGlow">
-              <feGaussianBlur stdDeviation="4" result="glow" />
-              <feMerge><feMergeNode in="glow" /><feMergeNode in="SourceGraphic" /></feMerge>
-            </filter>
-          </defs>
-          <motion.path
-            d="M 300 0 L 280 150 L 320 300 L 270 500 L 340 750 L 290 950 L 310 1200"
-            fill="none"
-            stroke="#D4AF37"
-            strokeWidth="2"
-            filter="url(#lightningGlow)"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1, opacity: [0.1, 0.8, 0.2, 0.6, 0.1] }}
-            transition={{ 
-              pathLength: { duration: 2.5, ease: "easeIn" },
-              opacity: { duration: 0.15, repeat: Infinity } 
-            }}
-          />
-        </svg>
-      </div>
-
-      <AnimatePresence>
-        {loading && (
-          <motion.div 
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-[100] bg-obsidian flex flex-col items-center justify-center"
-          >
-            <motion.img 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 2 }}
-              src="/logo.jpg" 
-              className="w-48 mix-blend-screen"
-            />
-            <motion.div 
-              initial={{ width: 0 }}
-              animate={{ width: "100px" }}
-              transition={{ delay: 1, duration: 1.5 }}
-              className="h-px bg-gold/30 mt-8"
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* 1. HERO SECTION */}
       <section className="h-screen flex flex-col items-center justify-center text-center px-6 relative z-10">
         <motion.div
@@ -142,78 +83,89 @@ function App() {
           <img src="/logo.jpg" alt="Logo" className="w-24 md:w-32 mb-12 mix-blend-screen" />
           <p className="font-sans text-gold tracking-[.6em] uppercase text-[9px] mb-6 font-light">Somkay Lumière</p>
           <h1 className="text-5xl md:text-8xl font-serif leading-tight mb-8 tracking-tight text-bone">
-            Light, Forged <br/>
+            Identity, Forged <br/>
             <span className="italic text-gold font-extralight font-serif">in the Dark.</span>
           </h1>
-          <div className="h-px w-8 bg-gold/40 mb-12"></div>
           <button 
-            onClick={() => document.getElementById('philosophy').scrollIntoView({ behavior: 'smooth' })}
+            onClick={() => document.getElementById('pillars').scrollIntoView({ behavior: 'smooth' })}
             className="font-sans px-10 py-4 border border-gold/20 text-gold text-[9px] tracking-[.4em] uppercase hover:bg-gold hover:text-black transition-all duration-700"
           >
-            Begin the Ritual
+            Explore the Architecture
           </button>
         </motion.div>
       </section>
 
-      {/* 2. PHILOSOPHY & MANIFESTO */}
-      <section id="philosophy" className="py-60 px-6 text-center relative z-10 bg-gradient-to-b from-transparent via-black/20 to-transparent">
-        <div className="max-w-3xl mx-auto flex flex-col items-center">
-          <motion.img 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 2 }}
-            src="/philosophy.jpg" 
-            className="w-full max-w-xl mb-24 border border-white/5 shadow-2xl"
-            alt="The Somkay Lumière Manifesto"
-          />
-          <div className="space-y-12">
-            <h2 className="font-serif italic text-4xl md:text-6xl mb-8 text-bone/90 leading-tight">
-              We do not hide the breaks. <br/> 
-              <span className="text-gold">We gild them.</span>
+      {/* 2. THE THREE PILLARS (Core Identity) */}
+      <section id="pillars" className="py-40 px-6 bg-black relative z-10 border-y border-white/5">
+        <div className="max-w-6xl mx-auto space-y-32">
+          <div className="max-w-3xl">
+            <p className="font-sans text-gold tracking-[.6em] uppercase text-[9px] mb-6">The Design House</p>
+            <h2 className="text-4xl md:text-6xl font-serif text-bone leading-tight">
+              A Design House of <br/>
+              <span className="italic text-gold/80">Olfactory Artifacts.</span>
             </h2>
-            <div className="h-px w-12 bg-gold/30 mx-auto mb-10"></div>
-            <div className="space-y-8 font-serif text-xl md:text-2xl text-neutral-300 font-light leading-relaxed italic max-w-2xl mx-auto">
-              <p>"SomkayLumière is an identity system forged in the belief that our scars are not flaws, but maps of where we have conquered."</p>
-              <p>"We do not design for the untouched; we design for the resilient. Our scents are olfactory rituals, transforming personal mythology into light."</p>
+            <p className="font-serif text-xl text-neutral-400 italic mt-8 leading-relaxed">
+              "We represent the intersection of brutalist minimalism and narrative identity. 
+              We are the architects for those who see their presence as a series of deliberate chapters."
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 text-left">
+            {/* Pillar 1 */}
+            <div className="space-y-6">
+              <h3 className="text-gold font-sans text-[10px] tracking-[.4em] uppercase border-l border-gold/30 pl-4">I. Identity System</h3>
+              <p className="text-sm text-neutral-500 font-light leading-relaxed">
+                Fragrance is the invisible layer of your architecture. We don't follow seasonal trends; 
+                we build a permanent library of self-expression. Each release is a narrative chapter.
+              </p>
             </div>
-            <p className="font-sans text-neutral-500 font-light leading-relaxed tracking-[.3em] text-[10px] uppercase pt-8">A Signature of Reclamation.</p>
+            {/* Pillar 2 */}
+            <div className="space-y-6">
+              <h3 className="text-gold font-sans text-[10px] tracking-[.4em] uppercase border-l border-gold/30 pl-4">II. Technical Intimacy</h3>
+              <p className="text-sm text-neutral-500 font-light leading-relaxed">
+                We have rejected alcohol-based sprays. Our high-concentration oil extraits 
+                sit on the skin rather than in the air. Tactile, intimate, and evolving.
+              </p>
+            </div>
+            {/* Pillar 3 */}
+            <div className="space-y-6">
+              <h3 className="text-gold font-sans text-[10px] tracking-[.4em] uppercase border-l border-gold/30 pl-4">III. Brutalist Aesthetic</h3>
+              <p className="text-sm text-neutral-500 font-light leading-relaxed">
+                Raw concrete. Heavy shadows. Unyielding weight. We strip away the fluff 
+                to reveal the raw power of the material and the beauty in the shadow.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-{/* 2.5 KICKSTARTER CALL TO ACTION - Date Removed */}
-      <section className="py-32 px-6 bg-black/40 border-y border-gold/10 relative z-10">
-        <div className="max-w-4xl mx-auto text-center space-y-10">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 2 }}
-          >
-            <p className="font-sans text-gold tracking-[.6em] uppercase text-[10px] mb-4">The Genesis</p>
-            <h2 className="text-4xl md:text-5xl font-serif text-bone leading-tight mb-8">
-              The Alchemy Set: <br/> 
-              <span className="italic font-extralight text-gold/80">A Ritual of Co-Creation</span>
-            </h2>
-            
-            <p className="font-serif text-lg text-neutral-400 italic max-w-2xl mx-auto mb-12 leading-relaxed">
-              Join the Founding Circle on Kickstarter and help us anchor the future of Somkay Lumière.
-            </p>
+      {/* 3. KICKSTARTER & MANIFESTO */}
+      <section className="py-40 px-6 bg-neutral-950 text-center relative z-10 border-b border-white/5">
+        <div className="max-w-4xl mx-auto space-y-12">
+          <p className="font-sans text-gold tracking-[.6em] uppercase text-[10px]">The Genesis</p>
+          <h2 className="text-4xl md:text-6xl font-serif text-bone leading-tight">
+            "We don't release products. <br/> 
+            <span className="italic font-extralight text-gold/80 text-3xl md:text-5xl">We release Chapters."</span>
+          </h2>
+          
+          <p className="font-serif text-lg text-neutral-500 italic max-w-2xl mx-auto leading-relaxed">
+            Somkay Lumière is the quiet, heavy alternative for the observer and the architect. 
+            Join the Founding Circle on Kickstarter to help us anchor our next Chapter.
+          </p>
 
-            <a 
-              href="https://www.kickstarter.com/projects/somkaylumiere/somkay-lumiere-fragrance-as-identity"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => ReactGA.event({ category: "Conversion", action: "Clicked Kickstarter Link" })}
-              className="inline-block font-sans px-12 py-5 border border-gold/30 text-gold text-[10px] tracking-[.4em] uppercase hover:bg-gold hover:text-black transition-all duration-700 shadow-[0_0_20px_rgba(212,175,55,0.05)]"
-            >
-              Enter the Campaign
-            </a>
-          </motion.div>
+          <a 
+            href="https://www.kickstarter.com/projects/somkaylumiere/somkay-lumiere-fragrance-as-identity"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => ReactGA.event({ category: "Conversion", action: "Clicked Kickstarter Link" })}
+            className="inline-block font-sans px-12 py-5 border border-gold/30 text-gold text-[10px] tracking-[.4em] uppercase hover:bg-gold hover:text-black transition-all duration-700"
+          >
+            Enter the Campaign
+          </a>
         </div>
       </section>
 
-      {/* 3. ALCHEMY COLLECTION */}
+      {/* 4. ALCHEMY COLLECTION (CHAPTERS) */}
       <section id="collection" className="py-40 px-6 max-w-6xl mx-auto relative z-10">
         {chapters.map((ch, i) => (
           <motion.div 
@@ -221,21 +173,17 @@ function App() {
             className={`mb-64 flex flex-col ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-20 items-center`}
           >
             <div className="w-full md:w-1/2 aspect-video bg-neutral-950 relative border border-white/5 overflow-hidden group">
-              <img src={process.env.PUBLIC_URL + ch.image} className="w-full h-full object-cover grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-[2000ms]" alt={ch.title} />
+              <img src={ch.image} className="w-full h-full object-cover grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-[2000ms]" alt={ch.title} />
               <div className="absolute inset-0 flex items-center justify-center text-gold/[0.03] font-serif text-[15rem] pointer-events-none italic">{ch.id}</div>
             </div>
-            <div className="w-full md:w-1/2 space-y-10">
+            <div className="w-full md:w-1/2 space-y-10 text-left">
               <div>
                 <p className="font-serif italic text-gold text-3xl mb-2">{ch.sub}</p>
                 <h3 className="text-5xl font-serif tracking-tight">{ch.title}</h3>
               </div>
               <p className="font-sans text-gold/80 text-[10px] tracking-[.4em] uppercase border-l border-gold/30 pl-4">{ch.notes}</p>
-              <p className="font-sans text-neutral-400 font-light leading-relaxed text-sm max-w-sm">{ch.desc}</p>
               <button 
-                onClick={() => {
-                  ReactGA.event({ category: "Engagement", action: "Viewed Narrative", label: ch.title });
-                  setActiveStory(ch);
-                }}
+                onClick={() => setActiveStory(ch)}
                 className="font-sans text-bone text-[9px] tracking-[.4em] uppercase border-b border-gold/40 pb-2 hover:text-gold transition-all"
               >
                 Explore Narrative
@@ -245,7 +193,7 @@ function App() {
         ))}
       </section>
 
-      {/* 4. THE NARRATIVE VAULT */}
+      {/* 5. MODAL: NARRATIVE VAULT */}
       <AnimatePresence>
         {activeStory && (
           <motion.div 
@@ -262,32 +210,29 @@ function App() {
         )}
       </AnimatePresence>
 
-      {/* 5. FOOTER & FOUNDING CIRCLE */}
-      <footer className="py-40 bg-black/50 border-t border-white/5 text-center px-6 relative z-10">
-        <h2 className="font-serif text-3xl mb-4 text-bone">Join the Founding Circle</h2>
-        <p className="font-sans text-neutral-500 text-[10px] tracking-widest uppercase mb-12 italic">Be the first to step into the light.</p>
+      {/* 6. FOOTER & FOUNDING CIRCLE */}
+      <footer className="py-40 bg-black text-center px-6 relative z-10 border-t border-white/5">
+        <p className="font-serif italic text-gold text-2xl mb-12">We are the light in the raw concrete.</p>
+        
+        <h2 className="font-serif text-3xl mb-12 text-bone">Join the Founding Circle</h2>
         <form onSubmit={handleSubscribe} className="max-w-md mx-auto flex flex-col md:flex-row gap-6 mb-24">
           <input 
-            required type="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} 
-            placeholder={status === "sending" ? "TRANSMITTING..." : "YOUR EMAIL"} 
-            className="bg-transparent border-b border-white/10 w-full py-4 outline-none focus:border-gold transition-colors font-sans text-[10px] tracking-widest uppercase text-center" 
+            required type="email" value={email} onChange={(e) => setEmail(e.target.value)} 
+            placeholder="YOUR EMAIL" 
+            className="bg-transparent border-b border-white/10 w-full py-4 outline-none focus:border-gold transition-colors font-sans text-[10px] tracking-widest uppercase text-center text-bone" 
           />
-          <button type="submit" disabled={status === "sending"} className="font-sans text-gold uppercase tracking-[.3em] text-[10px] whitespace-nowrap hover:text-white transition-colors disabled:opacity-30">
-            {status === "sending" ? "Processing..." : "Subscribe"}
+          <button type="submit" className="font-sans text-gold uppercase tracking-[.3em] text-[10px] whitespace-nowrap hover:text-white transition-colors">
+            Subscribe
           </button>
         </form>
-        <div className="space-y-12">
-          <div className="flex justify-center">
-            <a href="https://www.instagram.com/somkaylumiere" target="_blank" rel="noopener noreferrer" className="font-sans text-gold text-[9px] tracking-[.5em] uppercase hover:text-white transition-colors border border-gold/20 px-6 py-2">Instagram</a>
-          </div>
-          <div className="space-y-4 opacity-30">
-            <p className="font-sans text-[8px] tracking-[.6em] uppercase">Somkay Lumière • United States</p>
-            <p className="font-sans text-[7px] tracking-widest uppercase italic text-gold">Scars into Light</p>
-          </div>
+
+        <div className="flex flex-col items-center space-y-6">
+          <a href="https://www.instagram.com/somkaylumiere" target="_blank" rel="noopener noreferrer" className="font-sans text-gold text-[9px] tracking-[.5em] uppercase border border-gold/20 px-6 py-2 hover:bg-gold hover:text-black transition-all duration-500">Instagram</a>
+          <p className="font-sans text-[8px] tracking-[.6em] uppercase opacity-30 mt-12">Somkay Lumière • United States</p>
         </div>
       </footer>
 
-      {/* TRACKING SYSTEMS */}
+      {/* Vercel Analytics */}
       <Analytics /> 
     </div>
   );
